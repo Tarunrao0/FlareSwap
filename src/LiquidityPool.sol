@@ -5,8 +5,9 @@ import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol"
 import {IERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {ReentrancyGuard} from "lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
 import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import {Flare} from "./Flare.sol";
 
-contract LiquidityPool is ERC20, ReentrancyGuard {
+contract LiquidityPool is ReentrancyGuard {
     IERC20 public token1;
     IERC20 public token2;
 
@@ -15,14 +16,20 @@ contract LiquidityPool is ERC20, ReentrancyGuard {
 
     uint public constant SWAP_FEE = 30;
 
+    address public owner;
+
+    Flare public flare;
+
     constructor(
         address _token1,
         address _token2,
-        string memory _name,
-        string memory _symbol
-    ) ERC20(_name, _symbol) {
+        address _owner,
+        Flare _flare
+    ) {
         token1 = IERC20(_token1);
         token2 = IERC20(_token2);
+        owner = _owner;
+        flare = _flare;
     }
 
     function calculateLiquidityAmount(
@@ -50,7 +57,7 @@ contract LiquidityPool is ERC20, ReentrancyGuard {
 
         uint liquidity = calculateLiquidityAmount(_amount1, _amount2);
         //These are liquidity tokens.
-        _mint(msg.sender, liquidity);
+        flare.mint(msg.sender, liquidity);
 
         reserve1 += _amount1;
         reserve2 += _amount2;
@@ -59,14 +66,14 @@ contract LiquidityPool is ERC20, ReentrancyGuard {
     function removeLiquidity(
         uint _amount
     ) external nonReentrant returns (uint, uint) {
-        uint totalLiquidity = totalSupply();
+        uint totalLiquidity = flare.totalSupply();
         require(_amount <= totalLiquidity, "Invalid Amount");
         //reserve1 and reserve2 have amount1 and amount2 stored in them respectively
 
         uint amountToken1 = (_amount * reserve1) / totalLiquidity;
         uint amountToken2 = (_amount * reserve2) / totalLiquidity;
 
-        _burn(msg.sender, _amount);
+        flare.burn(msg.sender, _amount);
 
         token1.transfer(msg.sender, amountToken1);
         token2.transfer(msg.sender, amountToken2);

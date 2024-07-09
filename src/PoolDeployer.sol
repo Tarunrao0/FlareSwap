@@ -19,7 +19,6 @@ contract PoolDeployer {
     constructor(address _owner) {
         owner = _owner;
         flare = new Flare(owner);
-        flare.authorizeContract(address(this));
     }
 
     /**
@@ -34,7 +33,7 @@ contract PoolDeployer {
                 getPool[_token2][_token1] == address(0),
             "Pool already exists!!"
         );
-        require(_token1 == _token2, "token addresses need to be unique");
+        require(_token1 != _token2, "token addresses need to be unique");
         require(
             _token1 != address(0) && _token2 != address(0),
             "Invalid Token Address"

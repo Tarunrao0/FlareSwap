@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
+import {IERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+
 import {LiquidityPool} from "./LiquidityPool.sol";
 import {Flare} from "./Flare.sol";
 
@@ -16,9 +18,9 @@ contract PoolDeployer {
     address public owner;
     Flare public flare;
 
-    constructor(address _owner) {
+    constructor(address _owner, address _flare) {
         owner = _owner;
-        flare = new Flare(owner);
+        flare = Flare(_flare);
     }
 
     /**
@@ -27,7 +29,10 @@ contract PoolDeployer {
      * @param _token1 Type 1 token
      * @param _token2 Type 2 token
      */
-    function createPool(address _token1, address _token2) public {
+    function createPool(
+        address _token1,
+        address _token2
+    ) public returns (LiquidityPool, address) {
         require(
             getPool[_token1][_token2] == address(0) &&
                 getPool[_token2][_token1] == address(0),
@@ -39,14 +44,14 @@ contract PoolDeployer {
             "Invalid Token Address"
         );
 
-        address pool = address(
-            new LiquidityPool(_token1, _token2, owner, flare)
-        );
-        flare.authorizeContract(pool);
+        LiquidityPool pool = new LiquidityPool(_token1, _token2, owner, flare);
 
-        getPool[_token1][_token2] = pool;
-        getPool[_token2][_token1] = pool;
+        flare.authorizeContract(address(pool));
 
-        emit PoolCreated(_token1, _token2, pool);
+        getPool[_token1][_token2] = address(pool);
+        getPool[_token2][_token1] = address(pool);
+
+        emit PoolCreated(_token1, _token2, address(pool));
+        return (pool, address(pool));
     }
 }

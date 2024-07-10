@@ -40,27 +40,47 @@ contract LiquidityPool is ReentrancyGuard {
     }
 
     function addLiquidity(uint _amount1, uint _amount2) external nonReentrant {
+        require(_amount1 != 0 && _amount2 != 0, "Invalid Amount");
+
         uint balanceToken1 = token1.balanceOf(address(this));
         uint balanceToken2 = token2.balanceOf(address(this));
 
         uint suppliedToken1 = _amount1;
         uint suppliedToken2 = _amount2;
 
-        //the existing balance is already in x * y = k ratio
-        require(
-            suppliedToken1 * balanceToken2 == suppliedToken2 * balanceToken1,
-            "Invalid ratio"
-        );
+        // Check if the pool is being created for the first time
+        if (balanceToken1 == 0 && balanceToken2 == 0) {
+            // Transfer the tokens to the pool
+            token1.transferFrom(msg.sender, address(this), _amount1);
+            token2.transferFrom(msg.sender, address(this), _amount2);
 
-        token1.transferFrom(msg.sender, address(this), _amount1);
-        token1.transferFrom(msg.sender, address(this), _amount2);
+            // Set the initial reserve amounts
+            reserve1 = _amount1;
+            reserve2 = _amount2;
 
-        uint liquidity = calculateLiquidityAmount(_amount1, _amount2);
-        //These are liquidity tokens.
-        flare.mint(msg.sender, liquidity);
+            // Mint the initial liquidity tokens
+            uint liquidity = calculateLiquidityAmount(_amount1, _amount2);
+            flare.mint(msg.sender, liquidity);
+        } else {
+            // (x + dx) * (y + dy) = x * y
+            require(
+                suppliedToken1 * balanceToken2 ==
+                    suppliedToken2 * balanceToken1,
+                "Invalid Ratio"
+            );
 
-        reserve1 += _amount1;
-        reserve2 += _amount2;
+            // Transfer the tokens to the pool
+            token1.transferFrom(msg.sender, address(this), _amount1);
+            token2.transferFrom(msg.sender, address(this), _amount2);
+
+            // Update the reserve amounts
+            reserve1 += _amount1;
+            reserve2 += _amount2;
+
+            // Mint the liquidity tokens
+            uint liquidity = calculateLiquidityAmount(_amount1, _amount2);
+            flare.mint(msg.sender, liquidity);
+        }
     }
 
     function removeLiquidity(
@@ -68,6 +88,7 @@ contract LiquidityPool is ReentrancyGuard {
     ) external nonReentrant returns (uint, uint) {
         uint totalLiquidity = flare.totalSupply();
         require(_amount <= totalLiquidity, "Invalid Amount");
+        require(_amount != 0, "amount cant be 0");
         //reserve1 and reserve2 have amount1 and amount2 stored in them respectively
 
         uint amountToken1 = (_amount * reserve1) / totalLiquidity;
@@ -130,5 +151,21 @@ contract LiquidityPool is ReentrancyGuard {
         }
 
         return amountOut;
+    }
+
+    function getReserve1() public view returns (uint) {
+        return reserve1;
+    }
+
+    function getReserve2() public view returns (uint) {
+        return reserve2;
+    }
+
+    function getToken1() public view returns (address) {
+        return address(token1);
+    }
+
+    function getToken2() public view returns (address) {
+        return address(token2);
     }
 }

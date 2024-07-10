@@ -14,7 +14,7 @@ contract TokenTest is Test {
 
     function setUp() public {
         flare = new Flare(owner);
-        factory = new PoolDeployer(owner);
+        factory = new PoolDeployer(owner, address(flare));
 
         vm.prank(owner);
         flare.authorizeContract(address(factory));

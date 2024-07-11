@@ -62,23 +62,32 @@ contract LiquidityPool is ReentrancyGuard {
             uint liquidity = calculateLiquidityAmount(_amount1, _amount2);
             flare.mint(msg.sender, liquidity);
         } else {
-            // (x + dx) * (y + dy) = x * y
-            require(
-                suppliedToken1 * balanceToken2 ==
-                    suppliedToken2 * balanceToken1,
-                "Invalid Ratio"
-            );
+            // Calculate the optimal amounts based on the existing reserves
+            uint optimalAmount2 = (suppliedToken1 * reserve2) / reserve1;
+
+            // Check if the supplied tokens are in the correct ratio
+            if (suppliedToken2 >= optimalAmount2) {
+                // Adjust the supplied token amounts to match the reserves ratio
+                suppliedToken2 = optimalAmount2;
+            } else {
+                uint optimalAmount1 = (suppliedToken2 * reserve1) / reserve2;
+                require(suppliedToken1 >= optimalAmount1, "Invalid Ratio");
+                suppliedToken1 = optimalAmount1;
+            }
 
             // Transfer the tokens to the pool
-            token1.transferFrom(msg.sender, address(this), _amount1);
-            token2.transferFrom(msg.sender, address(this), _amount2);
+            token1.transferFrom(msg.sender, address(this), suppliedToken1);
+            token2.transferFrom(msg.sender, address(this), suppliedToken2);
 
             // Update the reserve amounts
-            reserve1 += _amount1;
-            reserve2 += _amount2;
+            reserve1 += suppliedToken1;
+            reserve2 += suppliedToken2;
 
             // Mint the liquidity tokens
-            uint liquidity = calculateLiquidityAmount(_amount1, _amount2);
+            uint liquidity = calculateLiquidityAmount(
+                suppliedToken1,
+                suppliedToken2
+            );
             flare.mint(msg.sender, liquidity);
         }
     }

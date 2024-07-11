@@ -19,6 +19,7 @@ contract PoolTest is Test {
     address owner = makeAddr("owner");
     address alice = makeAddr("alice");
     address bob = makeAddr("bob");
+    address charlie = makeAddr("charlie");
     address public poolAddress;
 
     mockUSDC public usdc;
@@ -38,6 +39,9 @@ contract PoolTest is Test {
         usdc.mint(address(alice), 100);
         weth.mint(address(alice), 100);
 
+        usdc.mint(address(charlie), 100);
+        weth.mint(address(charlie), 100);
+
         usdc.mint(address(bob), 10);
 
         aave.mint(address(bob), 100);
@@ -55,24 +59,6 @@ contract PoolTest is Test {
         usdc.approve(poolAddress, 10);
         weth.approve(poolAddress, 20);
         pool.addLiquidity(10, 20);
-        vm.stopPrank();
-    }
-
-    //existing reserves test case
-    function test_second_depositor_reverts_improper_ratio() public {
-        vm.startPrank(alice);
-        usdc.approve(poolAddress, 10);
-        weth.approve(poolAddress, 20);
-        pool.addLiquidity(10, 20);
-        vm.stopPrank();
-
-        //lets try with an improper ratio
-
-        vm.startPrank(alice);
-        usdc.approve(poolAddress, 10);
-        weth.approve(poolAddress, 10);
-        vm.expectRevert("Invalid Ratio");
-        pool.addLiquidity(10, 10);
         vm.stopPrank();
     }
 
@@ -186,6 +172,12 @@ contract PoolTest is Test {
 
         assertEq(usdc.balanceOf(bob), 0);
         assertGt(weth.balanceOf(bob), 0);
+
+        vm.startPrank(alice);
+        usdc.approve(poolAddress, 10);
+        weth.approve(poolAddress, 20);
+        pool.addLiquidity(10, 20);
+        vm.stopPrank();
     }
 
     function test_swap_reverts_zero_amount() public {
@@ -242,5 +234,76 @@ contract PoolTest is Test {
         vm.expectRevert("Cant swap same tokens");
         pool.swap(10, address(weth), address(weth));
         vm.stopPrank();
+    }
+
+    function test_user_gets_full_amount_back_from_remove() public {
+        vm.startPrank(alice);
+        usdc.approve(poolAddress, 40);
+        weth.approve(poolAddress, 80);
+        pool.addLiquidity(40, 80);
+        vm.stopPrank();
+
+        //test to check if alice gets back what she deposited
+
+        vm.startPrank(alice);
+        pool.removeLiquidity(120);
+        vm.stopPrank();
+
+        assertEq(usdc.balanceOf(address(alice)), 100);
+        assertEq(weth.balanceOf(address(alice)), 100);
+    }
+
+    //Gets a profit on USDC due to a usdc swap taking place
+    function test_providers_profit() public {
+        vm.startPrank(alice);
+        usdc.approve(poolAddress, 40);
+        weth.approve(poolAddress, 80);
+        pool.addLiquidity(40, 80);
+        vm.stopPrank();
+
+        vm.startPrank(charlie);
+        usdc.approve(poolAddress, 40);
+        weth.approve(poolAddress, 80);
+        pool.addLiquidity(40, 80);
+        vm.stopPrank();
+
+        vm.startPrank(bob);
+        usdc.approve(poolAddress, 10);
+        pool.swap(10, address(usdc), address(weth));
+        vm.stopPrank();
+
+        vm.startPrank(alice);
+        pool.removeLiquidity(120);
+        vm.stopPrank();
+
+        console.log("alice's usdc balance", usdc.balanceOf(address(alice)));
+        console.log("alice's weth balance", weth.balanceOf(address(alice)));
+
+        console.log("pool balance : ", usdc.balanceOf(address(pool)));
+        console.log("pool balance : ", weth.balanceOf(address(pool)));
+    }
+
+    function test_getReserve1() public {
+        vm.startPrank(alice);
+        usdc.approve(poolAddress, 40);
+        weth.approve(poolAddress, 80);
+        pool.addLiquidity(40, 80);
+        vm.stopPrank();
+
+        uint amount = pool.getReserve1();
+
+        assertEq(amount, 40);
+    }
+
+    function test_getReserve2() public {
+        vm.startPrank(alice);
+        usdc.approve(poolAddress, 40);
+        weth.approve(poolAddress, 80);
+        pool.addLiquidity(40, 80);
+        vm.stopPrank();
+
+        uint amount = pool.getReserve2();
+
+        assertEq(amount, 80);
     }
 }

@@ -6,10 +6,10 @@ import {Flare} from "../src/Flare.sol";
 import {PoolDeployer} from "../src/PoolDeployer.sol";
 import {LiquidityPool} from "../src/LiquidityPool.sol";
 
-import {mockUSDC} from "./mocks/mockUSDC.sol";
-import {mockWETH} from "./mocks/mockWETH.sol";
-import {mockAAVE} from "./mocks/mockAAVE.sol";
-import {mockDAI} from "./mocks/mockDAI.sol";
+import {mockUSDC} from "../src/mocks/mockUSDC.sol";
+import {mockWETH} from "../src/mocks/mockWETH.sol";
+import {mockAAVE} from "../src/mocks/mockAAVE.sol";
+import {mockDAI} from "../src/mocks/mockDAI.sol";
 
 contract PoolTest is Test {
     Flare public flare;

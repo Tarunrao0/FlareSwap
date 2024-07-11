@@ -5,10 +5,10 @@ import {Test, console} from "forge-std/Test.sol";
 import {Flare} from "../src/Flare.sol";
 import {PoolDeployer} from "../src/PoolDeployer.sol";
 
-import {mockUSDC} from "./mocks/mockUSDC.sol";
-import {mockWETH} from "./mocks/mockWETH.sol";
-import {mockAAVE} from "./mocks/mockAAVE.sol";
-import {mockDAI} from "./mocks/mockDAI.sol";
+import {mockUSDC} from "../src/mocks/mockUSDC.sol";
+import {mockWETH} from "../src/mocks/mockWETH.sol";
+import {mockAAVE} from "../src/mocks/mockAAVE.sol";
+import {mockDAI} from "../src/mocks/mockDAI.sol";
 
 contract FactoryTest is Test {
     Flare public flare;

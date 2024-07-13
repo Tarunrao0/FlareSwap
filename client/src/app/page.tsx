@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import ReadContract from "../app/hooks/read-contract";
+import CreatePool from "./Components/create-pool";
 
 function App() {
   const account = useAccount();
@@ -42,7 +42,7 @@ function App() {
         <div>{status}</div>
         <div>{error?.message}</div>
       </div>
-      <ReadContract />
+      <CreatePool />
     </>
   );
 }

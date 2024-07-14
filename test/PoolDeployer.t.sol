@@ -54,7 +54,7 @@ contract FactoryTest is Test {
         factory.createPool(address(weth), address(weth));
     }
 
-    function test_create_pool() public {
+    function test_event() public {
         vm.prank(alice);
         factory.createPool(address(usdc), address(weth));
     }

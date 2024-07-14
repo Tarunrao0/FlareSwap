@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-import {IERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-
+import {IERC20Metadata} from "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {LiquidityPool} from "./LiquidityPool.sol";
 import {Flare} from "./Flare.sol";
 
@@ -10,8 +9,8 @@ contract PoolDeployer {
     mapping(address => mapping(address => address)) public getPool;
 
     event PoolCreated(
-        address indexed token1,
-        address indexed token2,
+        string indexed token1,
+        string indexed token2,
         address pool
     );
 
@@ -51,7 +50,10 @@ contract PoolDeployer {
         getPool[_token1][_token2] = address(pool);
         getPool[_token2][_token1] = address(pool);
 
-        emit PoolCreated(_token1, _token2, address(pool));
+        string memory token1Name = IERC20Metadata(_token1).name();
+        string memory token2Name = IERC20Metadata(_token2).name();
+
+        emit PoolCreated(token1Name, token2Name, address(pool));
         return (pool, address(pool));
     }
 }

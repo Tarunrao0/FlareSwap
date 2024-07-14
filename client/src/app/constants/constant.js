@@ -1,9 +1,9 @@
-export const mockUsdcAddress = "0x51F0451Ff9aF2ed13c2AA04Bc3FB6d2C56e0d7B6";
-export const mockWethAddress = "0x962E6a072e8f0D9581193D7C989C872bfCc36868";
-export const mockAaveAddress = "0x921E54897F0af1bA3929F5b52b6Fa36c87FeEf71";
-export const mockDaiAddress = "0xEE404eCc7e1190960040dA8EEbD97EF707306835";
-export const flareAddress = "0x1Dd302093D27dad4b52dB8B77Ee77901551B9D2d";
-export const poolDeployerAddress = "0x75aaFfa940C3cD7216bE23487E39AF544cAB13F5";
+export const mockUsdcAddress = "0x3c8047f4A9EC64bCaa0d6DEe396AF773Df1c2f3c";
+export const mockWethAddress = "0x955B3bCe8b0798917eD4a1e12Db029847353AB67";
+export const mockAaveAddress = "0x930DC2ef385EdC409D5804dE1251664aC924f655";
+export const mockDaiAddress = "0x4E599645aa0A52AE59be9d1E0C66F6276fd6DC0c";
+export const flareAddress = "0x6F931a78A602f33aa707C46087aad12Bf79456b1";
+export const poolDeployerAddress = "0x860E0B72585b5a1eDeE0EDD305C514B89f739Ff2";
 
 export const mockAaveAbi = [
   {
@@ -1842,15 +1842,15 @@ export const poolDeployerAbi = [
     inputs: [
       {
         indexed: true,
-        internalType: "address",
+        internalType: "string",
         name: "token1",
-        type: "address",
+        type: "string",
       },
       {
         indexed: true,
-        internalType: "address",
+        internalType: "string",
         name: "token2",
-        type: "address",
+        type: "string",
       },
       {
         indexed: false,
@@ -1942,7 +1942,6 @@ export const poolDeployerAbi = [
     type: "function",
   },
 ];
-
 export const liquidityPoolAbi = [
   {
     inputs: [

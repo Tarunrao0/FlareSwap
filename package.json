@@ -19,6 +19,7 @@
     "ethers": "^5.7.1"
   },
   "dependencies": {
+    "better-sqlite3": "^11.1.2",
     "dotenv": "^16.4.5"
   }
 }

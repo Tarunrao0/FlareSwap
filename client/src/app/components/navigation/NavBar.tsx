@@ -34,11 +34,6 @@ export default function NavBar() {
             </Link>
           </li>
           <li>
-            <Link legacyBehavior href="/tutorial" passHref>
-              <a className={styles.link}>Tutorial</a>
-            </Link>
-          </li>
-          <li>
             <Link legacyBehavior href="/create-pool" passHref>
               <a className={styles.link}>Create Pool</a>
             </Link>

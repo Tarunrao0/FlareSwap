@@ -18,13 +18,13 @@ db.prepare(
   `
     CREATE TABLE IF NOT EXISTS pools (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        slug TEXT NOT NULL UNIQUE,
-        name TEXT NOT NULL UNIQUE,
-        poolAddress TEXT NOT NULL UNIQUE,
-        token1Name TEXT NOT NULL UNIQUE,
-        token2Name TEXT NOT NULL UNIQUE,
-        token1Address TEXT NOT NULL UNIQUE,
-        token2Address TEXT NOT NULL UNIQUE
+        slug TEXT NOT NULL,
+        name TEXT NOT NULL,
+        poolAddress TEXT NOT NULL,
+        token1Name TEXT NOT NULL,
+        token2Name TEXT NOT NULL,
+        token1Address TEXT NOT NULL,
+        token2Address TEXT NOT NULL 
     )
     `
 ).run();

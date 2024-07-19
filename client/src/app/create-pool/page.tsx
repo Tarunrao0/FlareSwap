@@ -10,7 +10,7 @@ import {
 import {
   poolDeployerAddress,
   poolDeployerAbi,
-  mockUsdcAbi,
+  erc20Abi,
 } from "../constants/constant";
 import { publicClient } from "../components/client";
 import styles from "./page.module.css";
@@ -21,6 +21,12 @@ interface PoolCreatedEventArgs {
   token1: string;
   token2: string;
 }
+import { Rubik_Mono_One } from "next/font/google";
+
+const rubik = Rubik_Mono_One({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export default function CreatePool() {
   const { data: hash, error, isPending, writeContract } = useWriteContract();
@@ -29,6 +35,10 @@ export default function CreatePool() {
   const [nameB, setNameB] = useState("");
   const [token1Address, setToken1Address] = useState("");
   const [token2Address, setToken2Address] = useState("");
+
+  const updatePoolCallback = (poolAddress: string) => {
+    updatePool(nameA, nameB, poolAddress, token1Address, token2Address);
+  };
 
   useWatchContractEvent({
     address: poolDeployerAddress,
@@ -41,6 +51,16 @@ export default function CreatePool() {
         const pool = log.args.pool;
         console.log("Pool Address:", pool);
         setPoolAddress(pool);
+
+        console.log("Updating pool with:", {
+          nameA,
+          nameB,
+          poolAddress,
+          token1Address,
+          token2Address,
+        });
+
+        updatePoolCallback(pool);
       }
     },
   });
@@ -54,20 +74,24 @@ export default function CreatePool() {
     setToken1Address(tokenA);
     setToken2Address(tokenB);
 
-    const sym1 = await publicClient.readContract({
-      address: tokenA as `0x${string}`,
-      abi: mockUsdcAbi,
-      functionName: "symbol",
-    });
+    try {
+      const sym1 = await publicClient.readContract({
+        address: tokenA as `0x${string}`,
+        abi: erc20Abi,
+        functionName: "symbol",
+      });
 
-    const sym2 = await publicClient.readContract({
-      address: tokenB as `0x${string}`,
-      abi: mockUsdcAbi,
-      functionName: "symbol",
-    });
+      const sym2 = await publicClient.readContract({
+        address: tokenB as `0x${string}`,
+        abi: erc20Abi,
+        functionName: "symbol",
+      });
 
-    setNameA(sym1 as string);
-    setNameB(sym2 as string);
+      setNameA(sym1 as string);
+      setNameB(sym2 as string);
+    } catch (error) {
+      console.error("Error reading contract symbol:", error);
+    }
     // Call createPool
     writeContract({
       address: poolDeployerAddress,
@@ -75,8 +99,6 @@ export default function CreatePool() {
       functionName: "createPool",
       args: [tokenA, tokenB],
     });
-
-    await updatePool(nameA, nameB, poolAddress, token1Address, token2Address);
   }
 
   // Custom handlings
@@ -87,9 +109,11 @@ export default function CreatePool() {
     <form onSubmit={submit}>
       <ul>
         <div className={styles.div}>
-          <h1 className={styles.heading}>
-            Create a custom{""} <span className={styles.highlight}>pool</span>{" "}
-          </h1>
+          <div className={rubik.className}>
+            <h1 className={styles.heading}>
+              Create a custom{""} <span className={styles.highlight}>pool</span>{" "}
+            </h1>
+          </div>
           <ul>
             <p className={styles.main}>
               Dont see a pool with the tokens of your liking?
@@ -135,22 +159,30 @@ export default function CreatePool() {
             </div>
           </ul>
         </div>
-        {hash && <div>Transaction Hash: {hash}</div>}
-        {isConfirming && <div>Waiting for confirmation...</div>}
-        {isConfirmed && <div>Transaction confirmed.</div>}
-        {isConfirmed && (
-          <div>
-            {nameA && nameB && (
-              <div>
-                {nameA}/{nameB} pool created
-              </div>
-            )}
-          </div>
-        )}
-        {poolAddress && <div>Pool Address: {poolAddress}</div>}
-        {error && (
-          <div>Error: {(error as BaseError).shortMessage || error.message}</div>
-        )}
+        <div className={styles.reciept}>
+          {hash && <div>Transaction Hash: {hash}</div>}
+          {isConfirming && (
+            <div className={styles.misc}>Waiting for confirmation...</div>
+          )}
+          {isConfirmed && (
+            <div className={styles.misc}>Transaction confirmed.</div>
+          )}
+          {isConfirmed && (
+            <div>
+              {nameA && nameB && (
+                <div className={styles.misc}>
+                  {nameA}/{nameB} pool created
+                </div>
+              )}
+            </div>
+          )}
+          {poolAddress && <div>Pool Address: {poolAddress}</div>}
+          {error && (
+            <div>
+              Error: {(error as BaseError).shortMessage || error.message}
+            </div>
+          )}
+        </div>
       </ul>
     </form>
   );

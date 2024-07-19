@@ -1,0 +1,30 @@
+.positioning {
+  margin-top: 90px;
+  margin-left: 50px;
+  font-size: 40px;
+}
+
+.positioning h1 span {
+  display: block;
+}
+
+.positioning h1 span:first-child {
+  margin-bottom: 10px;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+}
+
+.imageContainer {
+  margin-top: 10px;
+  margin-left: 120px;
+}
+
+.imageContainer img {
+  width: 500px;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 10px;
+}

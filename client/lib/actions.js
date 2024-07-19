@@ -12,11 +12,11 @@ export async function updatePool(
   const pool = {
     name: `${nameA}/${nameB}`,
     slug: `${nameA}-${nameB}`,
-    poolAddress: `${poolAddress}`,
-    token1Name: `${nameA}`,
-    token2Name: `${nameB}`,
-    token1Address: `${token1Address}`,
-    token2Address: `${token2Address}`,
+    poolAddress: poolAddress,
+    token1Name: nameA,
+    token2Name: nameB,
+    token1Address: token1Address,
+    token2Address: token2Address,
   };
 
   console.log(pool);

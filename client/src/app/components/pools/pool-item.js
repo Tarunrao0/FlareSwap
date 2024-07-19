@@ -7,8 +7,9 @@ export default function PoolItem({ token1Name, token2Name, slug }) {
       <Link className={styles.link} href={`/${slug}`}>
         <div className={styles.box}>
           <ul>
-            <p className={styles.p}>{token1Name}/</p>
-            <p className={styles.p}>{token2Name}</p>
+            <p className={styles.p}>
+              {token1Name}/{token2Name}
+            </p>
           </ul>
         </div>
       </Link>

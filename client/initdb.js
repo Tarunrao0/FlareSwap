@@ -4,7 +4,7 @@ const db = sql("pools.db");
 const dummyPools = [
   {
     name: "USDC/WETH",
-    slug: "usdc-weth",
+    slug: "USDC-WETH",
     poolAddress:
       "0xd2b6214e0dfc2bc5cb2e4eb6bf3b3b4ab7b71f56bf550c1953d1d47c7647c832",
     token1Name: "USDC",

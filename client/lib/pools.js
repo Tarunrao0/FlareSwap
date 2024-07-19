@@ -23,3 +23,7 @@ export function savePool(pool) {
     `
   ).run(pool);
 }
+
+export function getPoolBySlug(slug) {
+  return db.prepare("SELECT * FROM pools WHERE slug = ?").get(slug);
+}

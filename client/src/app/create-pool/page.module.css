@@ -1,10 +1,11 @@
 .div {
-  margin-top: 200px;
-  margin-left: 40px;
+  margin-top: 150px;
+  margin-left: 10px;
 }
 
 .heading {
-  font-size: 100px;
+  font-size: 80px;
+  margin-rigth: 20px;
 }
 
 .main {
@@ -61,4 +62,14 @@
 .createPool:hover {
   background: linear-gradient(to bottom right, #ff0066 0%, #ff6600 100%);
   transform: translateY(-8px);
+}
+
+.reciept {
+  margin-top: 40px;
+  margin-left: 300px;
+  font-weight: 900;
+}
+
+.misc {
+  margin-left: 300px;
 }

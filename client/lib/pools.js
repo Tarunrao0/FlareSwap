@@ -6,7 +6,7 @@ export async function getPools() {
   return await db.prepare("SELECT * FROM pools").all();
 }
 
-export function savePool(pool) {
+export async function savePool(pool) {
   db.prepare(
     `
     INSERT INTO pools
@@ -24,6 +24,6 @@ export function savePool(pool) {
   ).run(pool);
 }
 
-export function getPoolBySlug(slug) {
-  return db.prepare("SELECT * FROM pools WHERE slug = ?").get(slug);
+export async function getPoolBySlug(slug) {
+  return await db.prepare("SELECT * FROM pools WHERE slug = ?").get(slug);
 }

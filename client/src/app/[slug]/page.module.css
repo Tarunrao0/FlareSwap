@@ -1,3 +1,42 @@
 .main {
-  margin-top: 300px;
+  margin-top: 150px;
+}
+
+.heading {
+  font-size: 50px;
+  margin-left: 150px;
+  background: -webkit-linear-gradient(#ff0066 0%, #ff6600 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a2a2a;
+  color: #909090;
+  width: 328px;
+  height: 180px;
+  border-radius: 20px;
+  font-size: 30px;
+}
+
+.boxContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1px;
+  margin-right: 80px;
+}
+
+.balance {
+  margin-right: 100px;
+}
+
+.swapImage {
+  position: absolute;
+  z-index: 10;
+  width: 65px;
+  height: 65px;
 }

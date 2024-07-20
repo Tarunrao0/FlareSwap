@@ -176,7 +176,11 @@ export default function CreatePool() {
               )}
             </div>
           )}
-          {poolAddress && <div>Pool Address: {poolAddress}</div>}
+          {poolAddress && (
+            <div className={styles.pooladdress}>
+              Pool Address: {poolAddress}
+            </div>
+          )}
           {error && (
             <div>
               Error: {(error as BaseError).shortMessage || error.message}

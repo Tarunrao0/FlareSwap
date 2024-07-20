@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     "src/app/components/connection/useMetamask.js",
     "src/app/components/pools/pools-grid.js"
-  ],
+, "src/app/[slug]/page.js", "src/app/[slug]/PoolPage.js"  ],
   "exclude": ["node_modules"]
 }

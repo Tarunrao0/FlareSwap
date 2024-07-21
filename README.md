@@ -1,66 +1,44 @@
-## Foundry
+# FlareSwap: A Decentralized Exchange Protocol
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+FlareSwap is a decentralized exchange (DEX) protocol that utilizes automated market makers (AMMs) to facilitate seamless token swaps between various pairs. In addition to enabling token swaps, FlareSwap allows users to create their own liquidity pools for any token pairs of their choice, ensuring flexibility and accessibility even if a desired pool doesn't already exist.
 
-Foundry consists of:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Quick look at the backend
 
-## Documentation
+The smart contracts for this protocol are written in Solidity and utilize a Hardhat-Foundry setup. These contracts have undergone extensive testing using Foundry to ensure their reliability and performance. They are currently deployed on the Sepolia testnet.
 
-https://book.getfoundry.sh/
 
-## Usage
+### Usage
 
-### Build
+#### Build
 
 ```shell
 $ forge build
 ```
 
-### Test
+#### Test
 
 ```shell
 $ forge test
 ```
 
-### Format
+#### Coverage
 
 ```shell
-$ forge fmt
+$ forge coverage
 ```
 
-### Gas Snapshots
+
+#### Deploy
 
 ```shell
-$ forge snapshot
+$ npx hardhat run script/deploy.js --network sepolia
 ```
 
-### Anvil
+### Frontend
 
-```shell
-$ anvil
-```
+The front end is built using Wagmi and NextJS. It also has a better-sqlite3 database to store all the pool addresses that were created. 
 
-### Deploy
+🎥 Video demonstration : `https://youtu.be/hgBCvz9OdFU` 
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+![image](https://github.com/user-attachments/assets/d365c907-b06b-42f5-a3e3-d07a2273d8dc)

@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import swap from "../../../public/swap.png";
 import Image from "next/image";
-import { Rubik_Lines, Rubik_Mono_One } from "next/font/google";
+import { Rubik_Mono_One } from "next/font/google";
 import React, { useEffect, useState } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { publicClient } from "../components/client";
@@ -19,7 +19,26 @@ export default function PoolPage({ poolData }) {
   const [token1Balance, setToken1Balance] = useState(null);
   const [token2Balance, setToken2Balance] = useState(null);
 
-  const { data: hash, error, isPending, writeContract } = useWriteContract();
+  const {
+    data: addLiquidityHash,
+    error: addLiquidityError,
+    isPending: isAddingLiquidity,
+    writeContract: writeAddLiquidityContract,
+  } = useWriteContract();
+
+  const {
+    data: removeLiquidityHash,
+    error: removeLiquidityError,
+    isPending: isRemovingLiquidity,
+    writeContract: writeRemoveLiquidityContract,
+  } = useWriteContract();
+
+  const {
+    data: swapHash,
+    error: swapError,
+    isPending: isSwapPending,
+    writeContract: writeSwapContract,
+  } = useWriteContract();
 
   useEffect(() => {
     const fetchBalances = async () => {
@@ -51,7 +70,7 @@ export default function PoolPage({ poolData }) {
 
   async function approveTokens(tokenAddress, amount) {
     try {
-      const approveTransaction = await writeContract({
+      const approveTransaction = await writeAddLiquidityContract({
         address: tokenAddress,
         abi: erc20Abi,
         functionName: "approve",
@@ -62,6 +81,30 @@ export default function PoolPage({ poolData }) {
       console.error("Error approving tokens:", error);
     }
   }
+
+  async function submitSwap(e) {
+    e.preventDefault();
+    const swapData = new FormData(e.target);
+    const swapAmount = swapData.get("swapAmount");
+    const tokenIn = swapData.get("tokenIN");
+    const tokenOut = swapData.get("tokenOUT");
+
+    await approveTokens(tokenIn, swapAmount);
+
+    writeSwapContract({
+      address: poolData.poolAddress,
+      abi: liquidityPoolAbi,
+      functionName: "swap",
+      args: [BigInt(swapAmount), tokenIn, tokenOut],
+    });
+    try {
+    } catch (swapErr) {
+      console.error("Swap error: ", swapErr);
+    }
+  }
+
+  const { isLoading: isSwapConfirming, isSuccess: isSwapConfirmed } =
+    useWaitForTransactionReceipt({ hash: swapHash });
 
   async function submitAddLiquidity(e) {
     e.preventDefault();
@@ -74,7 +117,7 @@ export default function PoolPage({ poolData }) {
       await approveTokens(poolData.token1Address, tokenAmountA);
       await approveTokens(poolData.token2Address, tokenAmountB);
 
-      writeContract({
+      writeAddLiquidityContract({
         address: poolData.poolAddress,
         abi: liquidityPoolAbi,
         functionName: "addLiquidity",
@@ -85,11 +128,35 @@ export default function PoolPage({ poolData }) {
     }
   }
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({ hash });
+  const {
+    isLoading: isAddLiquidityConfirming,
+    isSuccess: isAddLiquidityConfirmed,
+  } = useWaitForTransactionReceipt({ hash: addLiquidityHash });
+
+  async function submitRemoveLiquidity(e) {
+    e.preventDefault();
+    const removeFormData = new FormData(e.target);
+    const removeAmount = removeFormData.get("flare");
+
+    try {
+      writeRemoveLiquidityContract({
+        abi: liquidityPoolAbi,
+        address: poolData.poolAddress,
+        functionName: "removeLiquidity",
+        args: [BigInt(removeAmount)],
+      });
+    } catch (err) {
+      console.error("Error removing liquidity: ", err.message);
+    }
+  }
+
+  const {
+    isLoading: isRemoveLiquidityConfirming,
+    isSuccess: isRemoveLiquidityConfirmed,
+  } = useWaitForTransactionReceipt({ hash: removeLiquidityHash });
 
   return (
-    <div className={styles.gridPattern}>
+    <div className={styles.body}>
       <div className={styles.main}>
         <div className={styles.heading}>
           <h1 className={rubik.className}>
@@ -129,42 +196,152 @@ export default function PoolPage({ poolData }) {
             </div>
           </div>
         </div>
-        <p>Pool Address: {poolData.poolAddress}</p>
-        <p>
-          Token 1: {poolData.token1Name}: {poolData.token1Address}
-        </p>
-        <p>
-          Token 2: {poolData.token2Name}: {poolData.token2Address}
-        </p>
+        <div className={styles.poolDetails}>
+          <details>
+            <summary className={rubik.className}>Pool Details</summary>
+            <p>Pool Address: {poolData.poolAddress}</p>
+            <p>
+              {poolData.token1Name}: {poolData.token1Address}
+            </p>
+            <p>
+              {poolData.token2Name}: {poolData.token2Address}
+            </p>
+          </details>
+        </div>
       </div>
-
-      <form onSubmit={submitAddLiquidity}>
-        <div>
-          <ul>
-            <label>{poolData.token1Name} Amount</label>
+      <div className={styles.swapMain}>
+        <form onSubmit={submitSwap}>
+          <div>
+            <div className={rubik.className}>
+              <input
+                className={styles.inputBox}
+                name="swapAmount"
+                placeholder="Enter swap amount"
+              />
+            </div>
+            <div className={styles.swapContainer}>
+              <input
+                className={styles.inputAddressBox}
+                name="tokenIN"
+                placeholder="TokenIN"
+              />
+              <input
+                className={styles.inputAddressBox}
+                name="tokenOUT"
+                placeholder="TokenOUT"
+              />
+            </div>
+            <button
+              type="submit"
+              className={styles.swapButton}
+              disabled={isSwapPending}
+            >
+              {isSwapPending ? "Confirming..." : "Swap"}
+            </button>
+          </div>
+          <div>
+            {swapHash && <div>Transaction Hash: {swapHash}</div>}
+            {isSwapConfirming && (
+              <div className={styles.misc}>Waiting for confirmation...</div>
+            )}
+            {isSwapConfirmed && (
+              <div className={styles.misc}>Transaction confirmed.</div>
+            )}
+            {swapError && <div>Error: {swapError.message}</div>}
+          </div>
+        </form>
+      </div>
+      <div>
+        <div className={styles.addLiquidityContainer}>
+          <h1 className={rubik.className}>Add/Remove liquidity</h1>
+          <div>
+            <p>
+              Become a vital part of our liquidity pool by contributing your
+              assets.
+            </p>
+            <p>How this works : </p>
+            <p>
+              Deposit {poolData.token1Name} and {poolData.token2Name} into the
+              pool, following the required ratio.
+            </p>
+            <p>
+              Upon depositing, you will receive Flare tokens, which are
+              Liquidity Pool Tokens. These tokens signify your share in the
+              pool.
+            </p>
+            <p>
+              Each time a swap is executed, a small fee is collected. By keeping
+              your tokens in the pool, you earn yield over time.
+            </p>
+            <p>
+              Tokens can be removed from the pool anytime by burning the Flare
+              Tokens.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className={styles.formContainer}>
+        <form onSubmit={submitAddLiquidity}>
+          <div className={styles.addLiquidity}>
+            <label className={rubik.className}>
+              {poolData.token1Name} Amount
+            </label>
             <input type="text" name="tokenA" required />
-            <label>{poolData.token2Name} Amount</label>
+            <label className={rubik.className}>
+              {poolData.token2Name} Amount
+            </label>
             <input type="text" name="tokenB" required />
             <button
               className={styles.createPool}
-              disabled={isPending}
+              disabled={isAddingLiquidity}
               type="submit"
             >
-              {isPending ? "Confirming..." : "Add liquidity"}
+              {isAddingLiquidity ? "Confirming..." : "Add liquidity"}
             </button>
             <div>
-              {hash && <div>Transaction Hash: {hash}</div>}
-              {isConfirming && (
+              {addLiquidityHash && (
+                <div>Transaction Hash: {addLiquidityHash}</div>
+              )}
+              {isAddLiquidityConfirming && (
                 <div className={styles.misc}>Waiting for confirmation...</div>
               )}
-              {isConfirmed && (
+              {isAddLiquidityConfirmed && (
                 <div className={styles.misc}>Transaction confirmed.</div>
               )}
-              {error && <div>Error: {error.message}</div>}
+              {addLiquidityError && (
+                <div>Error: {addLiquidityError.message}</div>
+              )}
             </div>
-          </ul>
-        </div>
-      </form>
+          </div>
+        </form>
+        <form onSubmit={submitRemoveLiquidity}>
+          <div className={styles.removeLiquidity}>
+            <label className={rubik.className}>Flare Amount</label>
+            <input type="text" name="flare" required />
+            <button
+              className={styles.createPool}
+              disabled={isRemovingLiquidity}
+              type="submit"
+            >
+              {isRemovingLiquidity ? "Confirming..." : "Remove Liquidity"}
+            </button>
+            <div>
+              {removeLiquidityHash && (
+                <div>Transaction Hash: {removeLiquidityHash}</div>
+              )}
+              {isRemoveLiquidityConfirming && (
+                <div className={styles.misc}>Waiting for confirmation...</div>
+              )}
+              {isRemoveLiquidityConfirmed && (
+                <div className={styles.misc}>Transaction confirmed.</div>
+              )}
+              {removeLiquidityError && (
+                <div>Error: {removeLiquidityError.message}</div>
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

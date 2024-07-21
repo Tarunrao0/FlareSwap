@@ -1,3 +1,7 @@
+.body {
+  overflow: hidden;
+}
+
 .main {
   margin-top: 150px;
 }
@@ -39,4 +43,183 @@
   z-index: 10;
   width: 65px;
   height: 65px;
+}
+
+.poolDetails {
+  margin-top: 70px;
+  margin-left: 160px;
+  cursor: pointer;
+}
+
+.addLiquidityContainer {
+  margin-left: 160px;
+  margin-top: 60px;
+}
+
+.addLiquidity {
+  margin-top: 80px;
+  margin-left: 390px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a2a2a;
+  width: 300px;
+  height: 290px;
+  border-radius: 20px;
+}
+
+.addLiquidity label {
+  margin-bottom: 10px;
+}
+
+.addLiquidity input {
+  margin-bottom: 20px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.addLiquidity button {
+  border-radius: 7px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 900;
+  border: none;
+  transition: transform 0.3s;
+  padding: 10px;
+}
+
+.addLiquidity button:hover {
+  background: linear-gradient(to bottom right, #ff0066 0%, #ff6600 100%);
+  transform: translateY(-8px);
+}
+
+.removeLiquidity {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a2a2a;
+  width: 300px;
+  height: 290px;
+  border-radius: 20px;
+}
+
+.removeLiquidity label {
+  margin-bottom: 10px;
+}
+
+.removeLiquidity input {
+  margin-bottom: 20px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.removeLiquidity button {
+  border-radius: 7px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 900;
+  border: none;
+  transition: transform 0.3s;
+  padding: 10px;
+}
+
+.removeLiquidity button:hover {
+  background: linear-gradient(to bottom right, #ff0066 0%, #ff6600 100%);
+  transform: translateY(-8px);
+}
+
+.formContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.swapContainer {
+  display: flex;
+  gap: 2px;
+}
+
+.inputBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a2a2a;
+  color: #909090;
+  width: 507px;
+  height: 180px;
+  border-radius: 20px;
+  font-size: 30px;
+  border: none;
+  margin-bottom: 2px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.inputBox::placeholder {
+  text-align: center;
+}
+
+.inputBox:focus::placeholder {
+  opacity: 0;
+}
+
+.inputAddressBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a2a2a;
+  color: #909090;
+  width: 250px;
+  height: 180px;
+  border-radius: 20px;
+  font-size: 30px;
+  border: none;
+  font-weight: 900;
+}
+
+.inputAddressBox::placeholder {
+  text-align: center;
+}
+
+.swapBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a2a2a;
+  color: #909090;
+  width: 500px;
+  height: 180px;
+  border-radius: 10px;
+  font-size: 30px;
+  border: none;
+}
+
+.swapButton {
+  border-radius: 7px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 15px;
+  font-weight: 900;
+  border: none;
+  transition: transform 0.3s;
+  padding: 10px;
+  margin-left: 220px;
+  margin-top: 10px;
+}
+
+.swapButton:hover {
+  background: linear-gradient(to bottom right, #ff0066 0%, #ff6600 100%);
+  transform: translateY(-8px);
+}
+
+.swapMain {
+  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 50px;
 }

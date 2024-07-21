@@ -1,9 +1,9 @@
-export const mockUsdcAddress = "0x3c8047f4A9EC64bCaa0d6DEe396AF773Df1c2f3c";
-export const mockWethAddress = "0x955B3bCe8b0798917eD4a1e12Db029847353AB67";
-export const mockAaveAddress = "0x930DC2ef385EdC409D5804dE1251664aC924f655";
-export const mockDaiAddress = "0x4E599645aa0A52AE59be9d1E0C66F6276fd6DC0c";
-export const flareAddress = "0x6F931a78A602f33aa707C46087aad12Bf79456b1";
-export const poolDeployerAddress = "0x860E0B72585b5a1eDeE0EDD305C514B89f739Ff2";
+export const mockUsdcAddress = "0x7D53b8dB01B2a906C4DcA3A89ba54287BA1aC820";
+export const mockWethAddress = "0x03b0771477Ca6B0BF103f904652d6086e752E5a5";
+export const mockAaveAddress = "0x7a0722Be56A682f37D1E1591B73459FEc9DA9F06";
+export const mockDaiAddress = "0x094Bb2462B47679a31505FEd0273E8436990700e";
+export const flareAddress = "0x18dAa79fF2391F92DcE472FC335C5eE0e6b57407";
+export const poolDeployerAddress = "0xA2031ccDa9C4F059681b21dc59cA1aBA4234655f";
 
 export const mockAaveAbi = [
   {

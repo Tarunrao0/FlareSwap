@@ -239,17 +239,19 @@ export default function PoolPage({ poolData }) {
               {isSwapPending ? "Confirming..." : "Swap"}
             </button>
           </div>
-          <div>
-            {swapHash && <div>Transaction Hash: {swapHash}</div>}
-            {isSwapConfirming && (
-              <div className={styles.misc}>Waiting for confirmation...</div>
-            )}
-            {isSwapConfirmed && (
-              <div className={styles.misc}>Transaction confirmed.</div>
-            )}
-            {swapError && <div>Error: {swapError.message}</div>}
-          </div>
         </form>
+        <div>
+          {swapHash && (
+            <div className={styles.reciept}>Transaction Hash: {swapHash}</div>
+          )}
+          {isSwapConfirming && (
+            <div className={styles.misc}>Waiting for confirmation...</div>
+          )}
+          {isSwapConfirmed && (
+            <div className={styles.misc}>Transaction confirmed.</div>
+          )}
+          {swapError && <div>Error: {swapError.message}</div>}
+        </div>
       </div>
       <div>
         <div className={styles.addLiquidityContainer}>
@@ -298,20 +300,6 @@ export default function PoolPage({ poolData }) {
             >
               {isAddingLiquidity ? "Confirming..." : "Add liquidity"}
             </button>
-            <div>
-              {addLiquidityHash && (
-                <div>Transaction Hash: {addLiquidityHash}</div>
-              )}
-              {isAddLiquidityConfirming && (
-                <div className={styles.misc}>Waiting for confirmation...</div>
-              )}
-              {isAddLiquidityConfirmed && (
-                <div className={styles.misc}>Transaction confirmed.</div>
-              )}
-              {addLiquidityError && (
-                <div>Error: {addLiquidityError.message}</div>
-              )}
-            </div>
           </div>
         </form>
         <form onSubmit={submitRemoveLiquidity}>
@@ -325,22 +313,38 @@ export default function PoolPage({ poolData }) {
             >
               {isRemovingLiquidity ? "Confirming..." : "Remove Liquidity"}
             </button>
-            <div>
-              {removeLiquidityHash && (
-                <div>Transaction Hash: {removeLiquidityHash}</div>
-              )}
-              {isRemoveLiquidityConfirming && (
-                <div className={styles.misc}>Waiting for confirmation...</div>
-              )}
-              {isRemoveLiquidityConfirmed && (
-                <div className={styles.misc}>Transaction confirmed.</div>
-              )}
-              {removeLiquidityError && (
-                <div>Error: {removeLiquidityError.message}</div>
-              )}
-            </div>
           </div>
         </form>
+        {addLiquidityError && <div>Error: {addLiquidityError.message}</div>}
+      </div>
+      <div className={styles.recieptContainer}>
+        {removeLiquidityHash && (
+          <div className={styles.reciept}>
+            Transaction Hash: {removeLiquidityHash}
+          </div>
+        )}
+        {isRemoveLiquidityConfirming && (
+          <div className={styles.misc}>Waiting for confirmation...</div>
+        )}
+        {isRemoveLiquidityConfirmed && (
+          <div className={styles.misc}>Transaction confirmed.</div>
+        )}
+        {removeLiquidityError && (
+          <div>Error: {removeLiquidityError.message}</div>
+        )}
+      </div>
+      <div>
+        {addLiquidityHash && (
+          <div className={styles.reciept}>
+            Transaction Hash: {addLiquidityHash}
+          </div>
+        )}
+        {isAddLiquidityConfirming && (
+          <div className={styles.misc}>Waiting for confirmation...</div>
+        )}
+        {isAddLiquidityConfirmed && (
+          <div className={styles.misc}>Transaction confirmed.</div>
+        )}
       </div>
     </div>
   );

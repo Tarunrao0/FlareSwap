@@ -156,7 +156,7 @@ export default function PoolPage({ poolData }) {
   } = useWaitForTransactionReceipt({ hash: removeLiquidityHash });
 
   return (
-    <div className={styles.body}>
+    <div>
       <div className={styles.main}>
         <div className={styles.heading}>
           <h1 className={rubik.className}>

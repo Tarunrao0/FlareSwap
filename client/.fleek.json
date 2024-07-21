@@ -1,0 +1,8 @@
+{
+  "build": {
+    "baseDir": "/client",
+    "publicDir": "out",
+    "nodeVersion": "18.18.0",
+    "yarnVersion": "1.22.10"
+  }
+}

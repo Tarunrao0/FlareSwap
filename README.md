@@ -41,4 +41,17 @@ The front end is built using Wagmi and NextJS. It also has a better-sqlite3 data
 
 🎥 Video demonstration : `https://youtu.be/hgBCvz9OdFU` 
 
+#### Home Page
 ![image](https://github.com/user-attachments/assets/d365c907-b06b-42f5-a3e3-d07a2273d8dc)
+
+### Create Pool 
+
+![image](https://github.com/user-attachments/assets/27db9b0b-0b63-4609-aad3-972915566c14)
+![image](https://github.com/user-attachments/assets/a28bd32c-fa9c-4113-8909-ad50918dc4c6)
+
+
+### Pools 
+
+![image](https://github.com/user-attachments/assets/b89867e9-8a8b-44b1-a610-e9abbeba5643)
+![image](https://github.com/user-attachments/assets/37934370-a765-4f51-bfe8-c326999e2e63)
+![image](https://github.com/user-attachments/assets/9b83c765-a992-473a-aa52-87ca438ee7b9)

@@ -39,7 +39,7 @@ $ npx hardhat run script/deploy.js --network sepolia
 
 The front end is built using Wagmi and NextJS. It also has a better-sqlite3 database to store all the pool addresses that were created. 
 
-🎥 Video demonstration : `https://youtu.be/hgBCvz9OdFU` 
+🎥 Video demonstration : [FlareSwap-Demo](https://www.youtube.com/watch?v=hgBCvz9OdFU)
 
 #### Home Page
 ![image](https://github.com/user-attachments/assets/d365c907-b06b-42f5-a3e3-d07a2273d8dc)
